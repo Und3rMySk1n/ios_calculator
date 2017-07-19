@@ -1,0 +1,49 @@
+@import '../../config';
+
+.b-panel
+{
+    &_digits-panel
+    {
+        background-color: $digits-panel-color;
+    }
+
+    &_operands-panel
+    {
+        background-color: $operands-panel-color;
+    }
+
+    &__button
+    {
+        float: left;
+        width: $calculator-width / 4;
+        box-sizing: border-box;
+        border-right: 1px solid $color-tertiary;
+        border-bottom: 1px solid $color-tertiary;
+        cursor: pointer;
+        transition: background 0.15s ease;
+
+        color: $color-tertiary;
+        font-size: $panel-font-size;
+        line-height: $calculator-width / 4;
+        text-align: center;
+
+        &_double
+        {
+            width: $calculator-width / 2;
+            text-align: left;
+            padding-left: 12.5%;
+        }
+
+        &_operand
+        {
+            font-size: $panel-font-size-operand;
+            color: $color-base;
+            border-right: none;
+        }
+
+        &:hover
+        {
+            background: rgba(0, 0, 0, 0.03);
+        }
+    }
+}

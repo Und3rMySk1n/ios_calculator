@@ -3,4 +3,30 @@
 .b-calculator
 {
     font-family: $font-family-base;
+    font-weight: 300;
+    width: $calculator-width;
+    height: $calculator-height;
+    box-sizing: border-box;
+
+    &__result-screen
+    {
+        font-size: $result-screen-font-size;
+        line-height: 1;
+        color: $color-base;
+        text-align: right;
+        padding: 20px 25px;
+        background: $color-tertiary;
+    }
+
+    &__digits-panel
+    {
+        float: left;
+        width: $calculator-width * (3 / 4);
+    }
+
+    &__operands-panel
+    {
+        float: left;
+        width: $calculator-width * (1 / 4);
+    }
 }
