@@ -1,0 +1,23 @@
+{
+  "name": "ios-like-calculator",
+  "version": "1.0.0",
+  "repository": {
+    "type": "",
+    "url": "http://github.com/Und3rMySk1n/ios_calculator"
+  },
+  "devDependencies": {
+    "gulp": "^3.8.11",
+    "gulp-autoprefixer": "*",
+    "gulp-clean": "^0.3.1",
+    "gulp-cssmin": "*",
+    "gulp-minify-html": "^1.0.2",
+    "gulp-rigger": "^0.5.8",
+    "gulp-sass": "^2.1.0",
+    "gulp-uglify": "*",
+    "gulp-util": "^3.0.3",
+    "gulp-watch": "*"
+  },
+  "dependencies": {
+    "gulp-lodash": "^0.1.2"
+  }
+}
