@@ -7,6 +7,7 @@ class Calculator {
         this.currentValue = 0;
         this.currentOperand = null;
         this.isComma = false;
+        this.newNumber = false;
 
         this.InitResultScreen();
         this.InitButtonsPanel();
@@ -28,9 +29,7 @@ class Calculator {
         this.InitClearButton();
         this.InitPlusMinisButton();
         this.InitPercentButton();
-        this.InitNumbers([7, 8, 9]);
-        this.InitNumbers([4, 5, 6]);
-        this.InitNumbers([1, 2, 3, 0]);
+        this.InitNumbers([7, 8, 9, 4, 5, 6, 1, 2, 3, 0]);
         this.InitCommaButton();
     }
 
@@ -80,6 +79,18 @@ class Calculator {
             this.buttonsPanel.appendChild(number);
 
             number.addEventListener('click', () => {
+                if (this.newNumber == true)
+                {
+                    this.newNumber = false;
+                    this.currentValue = 0;
+                    this.resultScreen.innerText = this.currentValue;
+
+                    if (this.currentOperand == null)
+                    {
+                        this.result = 0;
+                    }
+                }
+
                 if (!this.isComma)
                 {
                     this.currentValue = this.currentValue * 10 + parseInt(number.innerHTML);
@@ -121,6 +132,14 @@ class Calculator {
         this.divideButton.className = 'b-panel__button b-panel__button_operand';
         this.divideButton.innerHTML = '&divide;';
         this.operandsPanel.appendChild(this.divideButton);
+
+        this.divideButton.addEventListener('click', () => {
+            this.newNumber = true;
+            this.PerformOperation();
+            this.currentOperand = '/';
+            this.currentValue = this.result;
+            this.resultScreen.innerText = this.result;
+        })
     }
 
     InitMultiplyButton() {
@@ -128,6 +147,14 @@ class Calculator {
         this.multiplyButton.className = 'b-panel__button b-panel__button_operand';
         this.multiplyButton.innerHTML = '&times;';
         this.operandsPanel.appendChild(this.multiplyButton);
+
+        this.multiplyButton.addEventListener('click', () => {
+            this.newNumber = true;
+            this.PerformOperation();
+            this.currentOperand = '*';
+            this.currentValue = this.result;
+            this.resultScreen.innerText = this.result;
+        })
     }
 
     InitMinusButton() {
@@ -135,6 +162,14 @@ class Calculator {
         this.minusButton.className = 'b-panel__button b-panel__button_operand';
         this.minusButton.innerHTML = '&ndash;';
         this.operandsPanel.appendChild(this.minusButton);
+
+        this.minusButton.addEventListener('click', () => {
+            this.newNumber = true;
+            this.PerformOperation();
+            this.currentOperand = '-';
+            this.currentValue = this.result;
+            this.resultScreen.innerText = this.result;
+        })
     }
 
     InitPlusButton() {
@@ -142,6 +177,14 @@ class Calculator {
         this.plusButton.className = 'b-panel__button b-panel__button_operand';
         this.plusButton.innerHTML = '+';
         this.operandsPanel.appendChild(this.plusButton);
+
+        this.plusButton.addEventListener('click', () => {
+            this.newNumber = true;
+            this.PerformOperation();
+            this.currentOperand = '+';
+            this.currentValue = this.result;
+            this.resultScreen.innerText = this.result;
+        })
     }
 
     InitEqualsButton() {
@@ -149,6 +192,36 @@ class Calculator {
         this.equalsButton.className = 'b-panel__button b-panel__button_operand';
         this.equalsButton.innerHTML = '=';
         this.operandsPanel.appendChild(this.equalsButton);
+
+        this.equalsButton.addEventListener('click', () => {
+            this.newNumber = true;
+            this.PerformOperation();
+            this.resultScreen.innerText = this.result;
+
+            this.currentOperand = null;
+            this.currentValue = this.result;
+        })
+    }
+
+    PerformOperation() {
+        switch (this.currentOperand)
+        {
+            case '/':
+                this.result = this.result / this.currentValue;
+                break;
+            case '*':
+                this.result = this.result * this.currentValue;
+                break;
+            case '-':
+                this.result = this.result - this.currentValue;
+                break;
+            case '+':
+                this.result = this.result + this.currentValue;
+                break;
+            default:
+                this.result = this.currentValue;
+                break;
+        }
     }
 }
 
