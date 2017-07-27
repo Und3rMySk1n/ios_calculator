@@ -15,7 +15,8 @@
     "gulp-sass": "^2.1.0",
     "gulp-uglify": "*",
     "gulp-util": "^3.0.3",
-    "gulp-watch": "*"
+    "gulp-watch": "*",
+    "gulp-closure-compiler": "latest"
   },
   "dependencies": {
     "gulp-lodash": "^0.1.2"

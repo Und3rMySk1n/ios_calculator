@@ -2,39 +2,40 @@
 
 class Calculator {
     constructor(container) {
-        this.container = document.getElementById(container);
+        this.document = document;
+        this.container = this.document.getElementById(container);
         this.result = 0;
         this.currentValue = 0;
         this.currentOperand = null;
         this.isComma = false;
         this.newNumber = false;
 
-        this.InitResultScreen();
-        this.InitButtonsPanel();
-        this.InitOperandsPanel();
+        this._initResultScreen();
+        this._initButtonsPanel();
+        this._initOperandsPanel();
     }
 
-    InitResultScreen() {
-        this.resultScreen = document.createElement('div');
+    _initResultScreen() {
+        this.resultScreen = this.document.createElement('div');
         this.resultScreen.className = 'b-calculator__result-screen';
         this.resultScreen.innerText = this.currentValue;
         this.container.appendChild(this.resultScreen);
     }
 
-    InitButtonsPanel() {
-        this.buttonsPanel = document.createElement('div');
+    _initButtonsPanel() {
+        this.buttonsPanel = this.document.createElement('div');
         this.buttonsPanel.className = 'b-calculator__digits-panel b-panel b-panel_digits-panel';
         this.container.appendChild(this.buttonsPanel);
 
-        this.InitClearButton();
-        this.InitPlusMinisButton();
-        this.InitPercentButton();
-        this.InitNumbers([7, 8, 9, 4, 5, 6, 1, 2, 3, 0]);
-        this.InitCommaButton();
+        this._initClearButton();
+        this._initPlusMinisButton();
+        this._initPercentButton();
+        this._initNumbers([7, 8, 9, 4, 5, 6, 1, 2, 3, 0]);
+        this._initCommaButton();
     }
 
-    InitClearButton() {
-        this.clearButton = document.createElement('div');
+    _initClearButton() {
+        this.clearButton = this.document.createElement('div');
         this.clearButton.className = 'b-panel__button';
         this.clearButton.innerText = 'C';
         this.buttonsPanel.appendChild(this.clearButton);
@@ -46,8 +47,8 @@ class Calculator {
         })
     }
 
-    InitPlusMinisButton() {
-        this.plusMinusButton = document.createElement('div');
+    _initPlusMinisButton() {
+        this.plusMinusButton = this.document.createElement('div');
         this.plusMinusButton.className = 'b-panel__button';
         this.plusMinusButton.innerHTML = '&plusmn;';
         this.buttonsPanel.appendChild(this.plusMinusButton);
@@ -61,16 +62,16 @@ class Calculator {
         })
     }
 
-    InitPercentButton() {
-        this.percentButton = document.createElement('div');
+    _initPercentButton() {
+        this.percentButton = this.document.createElement('div');
         this.percentButton.className = 'b-panel__button';
         this.percentButton.innerHTML = '%';
         this.buttonsPanel.appendChild(this.percentButton);
     }
 
-    InitNumbers(numbers) {
+    _initNumbers(numbers) {
         numbers.forEach((item, i, arr) => {
-            let number = document.createElement('div');
+            let number = this.document.createElement('div');
             number.className = 'b-panel__button';
             if (item == 0) {
                 number.className = 'b-panel__button b-panel__button_double';
@@ -100,8 +101,8 @@ class Calculator {
         })
     }
 
-    InitCommaButton() {
-        this.commaButton = document.createElement('div');
+    _initCommaButton() {
+        this.commaButton = this.document.createElement('div');
         this.commaButton.className = 'b-panel__button';
         this.commaButton.innerHTML = ',';
         this.buttonsPanel.appendChild(this.commaButton);
@@ -115,87 +116,87 @@ class Calculator {
         })
     }
 
-    InitOperandsPanel() {
-        this.operandsPanel = document.createElement('div');
+    _initOperandsPanel() {
+        this.operandsPanel = this.document.createElement('div');
         this.operandsPanel.className = 'b-calculator__operands-panel b-panel b-panel_operands-panel';
         this.container.appendChild(this.operandsPanel);
 
-        this.InitDivideButton();
-        this.InitMultiplyButton();
-        this.InitMinusButton();
-        this.InitPlusButton();
-        this.InitEqualsButton();
+        this._initDivideButton();
+        this._initMultiplyButton();
+        this._initMinusButton();
+        this._initPlusButton();
+        this._initEqualsButton();
     }
 
-    InitDivideButton() {
-        this.divideButton = document.createElement('div');
+    _initDivideButton() {
+        this.divideButton = this.document.createElement('div');
         this.divideButton.className = 'b-panel__button b-panel__button_operand';
         this.divideButton.innerHTML = '&divide;';
         this.operandsPanel.appendChild(this.divideButton);
 
         this.divideButton.addEventListener('click', () => {
             this.newNumber = true;
-            this.PerformOperation();
+            this._performOperation();
             this.currentOperand = '/';
             this.currentValue = this.result;
             this.resultScreen.innerText = this.result;
         })
     }
 
-    InitMultiplyButton() {
-        this.multiplyButton = document.createElement('div');
+    _initMultiplyButton() {
+        this.multiplyButton = this.document.createElement('div');
         this.multiplyButton.className = 'b-panel__button b-panel__button_operand';
         this.multiplyButton.innerHTML = '&times;';
         this.operandsPanel.appendChild(this.multiplyButton);
 
         this.multiplyButton.addEventListener('click', () => {
             this.newNumber = true;
-            this.PerformOperation();
+            this._performOperation();
             this.currentOperand = '*';
             this.currentValue = this.result;
             this.resultScreen.innerText = this.result;
         })
     }
 
-    InitMinusButton() {
-        this.minusButton = document.createElement('div');
+    _initMinusButton() {
+        this.minusButton = this.document.createElement('div');
         this.minusButton.className = 'b-panel__button b-panel__button_operand';
         this.minusButton.innerHTML = '&ndash;';
         this.operandsPanel.appendChild(this.minusButton);
 
         this.minusButton.addEventListener('click', () => {
             this.newNumber = true;
-            this.PerformOperation();
+            this._performOperation();
             this.currentOperand = '-';
             this.currentValue = this.result;
             this.resultScreen.innerText = this.result;
         })
     }
 
-    InitPlusButton() {
-        this.plusButton = document.createElement('div');
+    _initPlusButton() {
+        this.plusButton = this.document.createElement('div');
         this.plusButton.className = 'b-panel__button b-panel__button_operand';
         this.plusButton.innerHTML = '+';
         this.operandsPanel.appendChild(this.plusButton);
 
         this.plusButton.addEventListener('click', () => {
             this.newNumber = true;
-            this.PerformOperation();
+            this._performOperation();
             this.currentOperand = '+';
             this.currentValue = this.result;
             this.resultScreen.innerText = this.result;
         })
     }
 
-    InitEqualsButton() {
-        this.equalsButton = document.createElement('div');
+    _initEqualsButton() {
+        this.equalsButton = this.document.createElement('div');
         this.equalsButton.className = 'b-panel__button b-panel__button_operand';
         this.equalsButton.innerHTML = '=';
         this.operandsPanel.appendChild(this.equalsButton);
 
         this.equalsButton.addEventListener('click', () => {
             this.newNumber = true;
-            this.PerformOperation();
+            this._performOperation();
             this.resultScreen.innerText = this.result;
 
             this.currentOperand = null;
@@ -203,7 +204,7 @@ class Calculator {
         })
     }
 
-    PerformOperation() {
+    _performOperation() {
         switch (this.currentOperand)
         {
             case '/':
@@ -225,4 +226,4 @@ class Calculator {
     }
 }
 
-let calculator = new Calculator('calculator');
+const calculator = new Calculator('calculator');
