@@ -1,6 +1,10 @@
 'use strict';
 
 class Calculator {
+    /**
+     *
+     * @param container
+     */
     constructor(container) {
         this.document = document;
         this.container = this.document.getElementById(container);
@@ -10,11 +14,28 @@ class Calculator {
         this.isComma = false;
         this.newNumber = false;
 
+        this.resultScreen = null;
+        this.buttonsPanel = null;
+        this.clearButton = null;
+        this.plusMinusButton = null;
+        this.percentButton = null;
+        this.commaButton = null;
+        this.operandsPanel = null;
+        this.divideButton = null;
+        this.multiplyButton = null;
+        this.minusButton = null;
+        this.plusButton = null;
+        this.equalsButton = null;
+
         this._initResultScreen();
         this._initButtonsPanel();
         this._initOperandsPanel();
     }
 
+    /**
+     *
+     * @private
+     */
     _initResultScreen() {
         this.resultScreen = this.document.createElement('div');
         this.resultScreen.className = 'b-calculator__result-screen';
@@ -22,6 +43,10 @@ class Calculator {
         this.container.appendChild(this.resultScreen);
     }
 
+    /**
+     *
+     * @private
+     */
     _initButtonsPanel() {
         this.buttonsPanel = this.document.createElement('div');
         this.buttonsPanel.className = 'b-calculator__digits-panel b-panel b-panel_digits-panel';
@@ -34,6 +59,10 @@ class Calculator {
         this._initCommaButton();
     }
 
+    /**
+     *
+     * @private
+     */
     _initClearButton() {
         this.clearButton = this.document.createElement('div');
         this.clearButton.className = 'b-panel__button';
@@ -47,6 +76,10 @@ class Calculator {
         })
     }
 
+    /**
+     *
+     * @private
+     */
     _initPlusMinisButton() {
         this.plusMinusButton = this.document.createElement('div');
         this.plusMinusButton.className = 'b-panel__button';
@@ -62,6 +95,10 @@ class Calculator {
         })
     }
 
+    /**
+     *
+     * @private
+     */
     _initPercentButton() {
         this.percentButton = this.document.createElement('div');
         this.percentButton.className = 'b-panel__button';
@@ -69,6 +106,11 @@ class Calculator {
         this.buttonsPanel.appendChild(this.percentButton);
     }
 
+    /**
+     *
+     * @param numbers
+     * @private
+     */
     _initNumbers(numbers) {
         numbers.forEach((item, i, arr) => {
             let number = this.document.createElement('div');
@@ -86,7 +128,7 @@ class Calculator {
                     this.currentValue = 0;
                     this.resultScreen.innerText = this.currentValue;
 
-                    if (this.currentOperand == null)
+                    if (!this.currentOperand)
                     {
                         this.result = 0;
                     }
@@ -94,13 +136,17 @@ class Calculator {
 
                 if (!this.isComma)
                 {
-                    this.currentValue = this.currentValue * 10 + parseInt(number.innerHTML);
+                    this.currentValue = this.currentValue * 10 + parseInt(number.innerHTML, 10);
                     this.resultScreen.innerText = this.currentValue;
                 }
             })
         })
     }
 
+    /**
+     *
+     * @private
+     */
     _initCommaButton() {
         this.commaButton = this.document.createElement('div');
         this.commaButton.className = 'b-panel__button';
@@ -116,6 +162,10 @@ class Calculator {
         })
     }
 
+    /**
+     *
+     * @private
+     */
     _initOperandsPanel() {
         this.operandsPanel = this.document.createElement('div');
         this.operandsPanel.className = 'b-calculator__operands-panel b-panel b-panel_operands-panel';
@@ -128,6 +178,10 @@ class Calculator {
         this._initEqualsButton();
     }
 
+    /**
+     *
+     * @private
+     */
     _initDivideButton() {
         this.divideButton = this.document.createElement('div');
         this.divideButton.className = 'b-panel__button b-panel__button_operand';
@@ -143,6 +197,10 @@ class Calculator {
         })
     }
 
+    /**
+     *
+     * @private
+     */
     _initMultiplyButton() {
         this.multiplyButton = this.document.createElement('div');
         this.multiplyButton.className = 'b-panel__button b-panel__button_operand';
@@ -158,6 +216,10 @@ class Calculator {
         })
     }
 
+    /**
+     *
+     * @private
+     */
     _initMinusButton() {
         this.minusButton = this.document.createElement('div');
         this.minusButton.className = 'b-panel__button b-panel__button_operand';
@@ -173,6 +235,10 @@ class Calculator {
         })
     }
 
+    /**
+     *
+     * @private
+     */
     _initPlusButton() {
         this.plusButton = this.document.createElement('div');
         this.plusButton.className = 'b-panel__button b-panel__button_operand';
@@ -188,6 +254,10 @@ class Calculator {
         })
     }
 
+    /**
+     *
+     * @private
+     */
     _initEqualsButton() {
         this.equalsButton = this.document.createElement('div');
         this.equalsButton.className = 'b-panel__button b-panel__button_operand';
@@ -204,6 +274,10 @@ class Calculator {
         })
     }
 
+    /**
+     *
+     * @private
+     */
     _performOperation() {
         switch (this.currentOperand)
         {

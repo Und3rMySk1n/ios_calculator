@@ -1,5 +1,6 @@
 'use strict';
 
+const compiler = require('google-closure-compiler-js').gulp();
 var gulp = require('gulp'),
     watch = require('gulp-watch'),
     prefixer = require('gulp-autoprefixer'),
@@ -31,14 +32,18 @@ var path = {
 gulp.task('html:build', function () {
     gulp.src([path.src.html])
         .pipe(rigger())
-        //.pipe(minifyHTML())
         .pipe(gulp.dest(path.build.html));
 });
 
 gulp.task('js:build', function () {
-    gulp.src(path.src.js)
-        .pipe(rigger())
-        //.pipe(uglify())
+    return gulp.src(path.src.js)
+        .pipe(compiler({
+            compilationLevel: 'ADVANCED',
+            warningLevel: 'VERBOSE',
+            outputWrapper: '(function(){\n%output%\n}).call(this)',
+            jsOutputFile: 'calculator.js',
+            createSourceMap: true
+        }))
         .pipe(gulp.dest(path.build.js));
 });
 
@@ -46,7 +51,6 @@ gulp.task('style:build', function () {
     gulp.src(path.src.style)
         .pipe(sass().on('error', sass.logError))
         .pipe(prefixer())
-        //.pipe(cssmin())
         .pipe(gulp.dest(path.build.css));
 });
 
