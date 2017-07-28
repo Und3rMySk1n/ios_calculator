@@ -141,11 +141,11 @@ class Calculator {
 
                 if (!this.isComma) {
                     this.currentValue = this.currentValue * 10 + parseInt(number.innerHTML, 10);
-                    this.resultScreen.innerText = this.currentValue;
+                    this.resultScreen.innerText = this._formatNumber(this.currentValue);
                 } else {
                     this.numbersAfterComma++;
                     this.currentValue = this.currentValue + (parseInt(number.innerHTML, 10) / Math.pow(10,this.numbersAfterComma));
-                    this.resultScreen.innerText = this._formatCurrentNumber();
+                    this.resultScreen.innerText = this._formatNumber(this.currentValue);
                 }
             })
         })
@@ -163,8 +163,9 @@ class Calculator {
 
         this.commaButton.addEventListener('click', () => {
             if (!this.isComma) {
+                this.numbersAfterComma = 0;
                 this.isComma = true;
-                this.resultScreen.innerText = this.resultScreen.innerText + ',';
+                this.resultScreen.innerText = this.resultScreen.innerText + '.';
             }
         })
     }
@@ -200,7 +201,7 @@ class Calculator {
             this._performOperation();
             this.currentOperand = '/';
             this.currentValue = this.result;
-            this.resultScreen.innerText = this.result;
+            this.resultScreen.innerText = this._formatNumber(this.result);
         })
     }
 
@@ -219,7 +220,7 @@ class Calculator {
             this._performOperation();
             this.currentOperand = '*';
             this.currentValue = this.result;
-            this.resultScreen.innerText = this.result;
+            this.resultScreen.innerText = this._formatNumber(this.result);
         })
     }
 
@@ -238,7 +239,7 @@ class Calculator {
             this._performOperation();
             this.currentOperand = '-';
             this.currentValue = this.result;
-            this.resultScreen.innerText = this.result;
+            this.resultScreen.innerText = this._formatNumber(this.result);
         })
     }
 
@@ -257,7 +258,7 @@ class Calculator {
             this._performOperation();
             this.currentOperand = '+';
             this.currentValue = this.result;
-            this.resultScreen.innerText = this.result;
+            this.resultScreen.innerText = this._formatNumber(this.result);
         })
     }
 
@@ -274,7 +275,7 @@ class Calculator {
         this.equalsButton.addEventListener('click', () => {
             this._resetNumber();
             this._performOperation();
-            this.resultScreen.innerText = this.result;
+            this.resultScreen.innerText = this._formatNumber(this.result);
 
             this.currentOperand = null;
             this.currentValue = this.result;
@@ -313,17 +314,16 @@ class Calculator {
     _resetNumber() {
         this.newNumber = true;
         this.isComma = false;
-        this.numbersAfterComma = 0;
     }
 
     /**
      *
+     * @param number
      * @returns {number}
      * @private
      */
-    _formatCurrentNumber(){
-        let number = Math.floor(this.currentValue * Math.pow(10, this.numbersAfterComma));
-        return number / Math.pow(10, this.numbersAfterComma);
+    _formatNumber(number){
+        return (parseInt(this.currentValue * Math.pow(10, this.numbersAfterComma), 10)) / Math.pow(10, this.numbersAfterComma);
     }
 }
 
