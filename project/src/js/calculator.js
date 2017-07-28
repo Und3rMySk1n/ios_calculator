@@ -10,6 +10,8 @@ class Calculator {
         this.container = this.document.getElementById(container);
         this.result = 0;
         this.currentValue = 0;
+        this.numbersAfterComma = 0;
+
         this.currentOperand = null;
         this.isComma = false;
         this.newNumber = false;
@@ -72,6 +74,12 @@ class Calculator {
         this.clearButton.addEventListener('click', () => {
             this.result = 0;
             this.currentValue = 0;
+            this.numbersAfterComma = 0;
+
+            this.isComma = false;
+            this.currentOperand = null;
+            this.isComma = false;
+            this.newNumber = false;
             this.resultScreen.innerText = this.result;
         })
     }
@@ -87,8 +95,7 @@ class Calculator {
         this.buttonsPanel.appendChild(this.plusMinusButton);
 
         this.plusMinusButton.addEventListener('click', () => {
-            if (this.currentValue != 0)
-            {
+            if (this.currentValue != 0) {
                 this.currentValue *= -1;
                 this.resultScreen.innerText = this.currentValue;
             }
@@ -122,22 +129,23 @@ class Calculator {
             this.buttonsPanel.appendChild(number);
 
             number.addEventListener('click', () => {
-                if (this.newNumber == true)
-                {
+                if (this.newNumber == true) {
                     this.newNumber = false;
                     this.currentValue = 0;
                     this.resultScreen.innerText = this.currentValue;
 
-                    if (!this.currentOperand)
-                    {
+                    if (!this.currentOperand) {
                         this.result = 0;
                     }
                 }
 
-                if (!this.isComma)
-                {
+                if (!this.isComma) {
                     this.currentValue = this.currentValue * 10 + parseInt(number.innerHTML, 10);
                     this.resultScreen.innerText = this.currentValue;
+                } else {
+                    this.numbersAfterComma++;
+                    this.currentValue = this.currentValue + (parseInt(number.innerHTML, 10) / Math.pow(10,this.numbersAfterComma));
+                    this.resultScreen.innerText = this._formatCurrentNumber();
                 }
             })
         })
@@ -154,8 +162,7 @@ class Calculator {
         this.buttonsPanel.appendChild(this.commaButton);
 
         this.commaButton.addEventListener('click', () => {
-            if (!this.isComma)
-            {
+            if (!this.isComma) {
                 this.isComma = true;
                 this.resultScreen.innerText = this.resultScreen.innerText + ',';
             }
@@ -189,7 +196,7 @@ class Calculator {
         this.operandsPanel.appendChild(this.divideButton);
 
         this.divideButton.addEventListener('click', () => {
-            this.newNumber = true;
+            this._resetNumber();
             this._performOperation();
             this.currentOperand = '/';
             this.currentValue = this.result;
@@ -208,7 +215,7 @@ class Calculator {
         this.operandsPanel.appendChild(this.multiplyButton);
 
         this.multiplyButton.addEventListener('click', () => {
-            this.newNumber = true;
+            this._resetNumber();
             this._performOperation();
             this.currentOperand = '*';
             this.currentValue = this.result;
@@ -227,7 +234,7 @@ class Calculator {
         this.operandsPanel.appendChild(this.minusButton);
 
         this.minusButton.addEventListener('click', () => {
-            this.newNumber = true;
+            this._resetNumber();
             this._performOperation();
             this.currentOperand = '-';
             this.currentValue = this.result;
@@ -246,7 +253,7 @@ class Calculator {
         this.operandsPanel.appendChild(this.plusButton);
 
         this.plusButton.addEventListener('click', () => {
-            this.newNumber = true;
+            this._resetNumber();
             this._performOperation();
             this.currentOperand = '+';
             this.currentValue = this.result;
@@ -265,7 +272,7 @@ class Calculator {
         this.operandsPanel.appendChild(this.equalsButton);
 
         this.equalsButton.addEventListener('click', () => {
-            this.newNumber = true;
+            this._resetNumber();
             this._performOperation();
             this.resultScreen.innerText = this.result;
 
@@ -297,6 +304,26 @@ class Calculator {
                 this.result = this.currentValue;
                 break;
         }
+    }
+
+    /**
+     *
+     * @private
+     */
+    _resetNumber() {
+        this.newNumber = true;
+        this.isComma = false;
+        this.numbersAfterComma = 0;
+    }
+
+    /**
+     *
+     * @returns {number}
+     * @private
+     */
+    _formatCurrentNumber(){
+        let number = Math.floor(this.currentValue * Math.pow(10, this.numbersAfterComma));
+        return number / Math.pow(10, this.numbersAfterComma);
     }
 }
 
