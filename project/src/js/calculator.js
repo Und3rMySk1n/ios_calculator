@@ -199,6 +199,79 @@ class CalcModel {
         this._isComma = false;
         this._newNumber = false;
     }
+
+    /**
+     *
+     * @returns {number|string}
+     */
+    getResult() {
+        return this._formatNumber(this._result);
+    }
+
+    /**
+     *
+     * @returns {number|string}
+     */
+    getCurrentValue() {
+        return this._formatNumber(this._currentValue);
+    }
+
+    /**
+     *
+     * @param item
+     */
+    onNumberButtonClicked(item) {
+        if (this._newNumber == true)
+        {
+            this._newNumber = false;
+            this._currentValue = 0;
+
+            if (!this._currentOperand)
+            {
+                this._result = 0;
+            }
+        }
+
+        if (!this._isComma) {
+            this._currentValue = this._currentValue * 10 + parseInt(item.innerHTML, 10);
+        } else {
+            this._currentNumbersAfterComma++;
+            this._currentValue = this._currentValue + (parseInt(item.innerHTML, 10) / Math.pow(10,this._currentNumbersAfterComma));
+        }
+    }
+
+    onCommaButtonClicked() {
+        if (!this._isComma) {
+            this._currentNumbersAfterComma = 0;
+            this._isComma = true;
+        }
+    }
+
+    onClearButtonClicked() {
+        this._result = 0;
+        this._currentValue = 0;
+        this._resultNumbersAfterComma = 0;
+        this._currentNumbersAfterComma = 0;
+        this._currentOperand = null;
+        this._isComma = false;
+        this._newNumber = false;
+    }
+
+    /**
+     *
+     * @param number
+     * @returns {number|string}
+     * @private
+     */
+    _formatNumber(number){
+        let numbersAfterComma = Math.max(this._currentNumbersAfterComma, this._resultNumbersAfterComma);
+        let result = (parseInt(number * Math.pow(10, numbersAfterComma), 10)) / Math.pow(10, numbersAfterComma);
+        if (numbersAfterComma == 0 && this._isComma) {
+            result += '.';
+        }
+
+        return result;
+    }
 }
 
 class CalcController {
@@ -212,8 +285,19 @@ class CalcController {
     _initCalcButtons() {
         this._view.numberButtons.forEach((item, i, arr) => {
             item.addEventListener('click', () => {
-                this._view.ShowResult(item.innerHTML);
+                this._model.onNumberButtonClicked(item);
+                this._view.ShowResult(this._model.getCurrentValue());
             });
+        });
+
+        this._view.commaButton.addEventListener('click', () => {
+            this._model.onCommaButtonClicked();
+            this._view.ShowResult(this._model.getCurrentValue());
+        });
+
+        this._view.clearButton.addEventListener('click', () => {
+            this._model.onClearButtonClicked();
+            this._view.ShowResult(this._model.getCurrentValue());
         });
     }
 }
