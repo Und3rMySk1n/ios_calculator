@@ -80,6 +80,11 @@ class CalcView {
         this.clearButton.className = 'b-panel__button';
         this.clearButton.innerText = 'C';
         this._buttonsPanel.appendChild(this.clearButton);
+
+        this.clearButton.addEventListener('click', () => {
+            var clearButtonEvent = new Event('onClearButtonClicked', {bubbles: true});
+            this.divideButton.dispatchEvent(clearButtonEvent);
+        });
     }
 
     /**
@@ -119,6 +124,16 @@ class CalcView {
             number.innerHTML = item;
             this._buttonsPanel.appendChild(number);
             this.numberButtons.push(number);
+
+            number.addEventListener('click', () => {
+                var numberButtonEvent = new CustomEvent('onNumberButtonClicked', {
+                        bubbles: true,
+                        detail: {
+                            number: item
+                        }
+                    });
+                this.divideButton.dispatchEvent(numberButtonEvent);
+            });
         });
     }
 
@@ -131,6 +146,11 @@ class CalcView {
         this.commaButton.className = 'b-panel__button';
         this.commaButton.innerHTML = ',';
         this._buttonsPanel.appendChild(this.commaButton);
+
+        this.commaButton.addEventListener('click', () => {
+            var commaButtonEvent = new Event('onCommaButtonClicked', {bubbles: true});
+            this.divideButton.dispatchEvent(commaButtonEvent);
+        });
     }
 
     /**
@@ -142,6 +162,11 @@ class CalcView {
         this.divideButton.className = 'b-panel__button b-panel__button_operand';
         this.divideButton.innerHTML = '&divide;';
         this._operandsPanel.appendChild(this.divideButton);
+
+        this.divideButton.addEventListener('click', () => {
+            var divideButtonEvent = new Event('onDivideButtonClicked', {bubbles: true});
+            this.divideButton.dispatchEvent(divideButtonEvent);
+        });
     }
 
     /**
@@ -233,10 +258,10 @@ class CalcModel {
         }
 
         if (!this._isComma) {
-            this._currentValue = this._currentValue * 10 + parseInt(item.innerHTML, 10);
+            this._currentValue = this._currentValue * 10 + parseInt(item, 10);
         } else {
             this._currentNumbersAfterComma++;
-            this._currentValue = this._currentValue + (parseInt(item.innerHTML, 10) / Math.pow(10,this._currentNumbersAfterComma));
+            this._currentValue = this._currentValue + (parseInt(item, 10) / Math.pow(10,this._currentNumbersAfterComma));
         }
     }
 
@@ -276,6 +301,7 @@ class CalcModel {
 
 class CalcController {
     constructor(view, model) {
+        this._document = document;
         this._view = view;
         this._model = model;
 
@@ -283,21 +309,22 @@ class CalcController {
     }
 
     _initCalcButtons() {
-        this._view.numberButtons.forEach((item, i, arr) => {
-            item.addEventListener('click', () => {
-                this._model.onNumberButtonClicked(item);
-                this._view.ShowResult(this._model.getCurrentValue());
-            });
+        this._document.addEventListener('onNumberButtonClicked', (event) => {
+            this._model.onNumberButtonClicked(event.detail.number);
+            this._view.ShowResult(this._model.getCurrentValue());
         });
 
-        this._view.commaButton.addEventListener('click', () => {
+        this._document.addEventListener('onCommaButtonClicked', () => {
             this._model.onCommaButtonClicked();
             this._view.ShowResult(this._model.getCurrentValue());
         });
 
-        this._view.clearButton.addEventListener('click', () => {
+        this._document.addEventListener('onClearButtonClicked', () => {
             this._model.onClearButtonClicked();
             this._view.ShowResult(this._model.getCurrentValue());
+        });
+
+        this._document.addEventListener('onDivideButtonClicked', () => {
         });
     }
 }
