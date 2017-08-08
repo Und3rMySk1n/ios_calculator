@@ -49,7 +49,7 @@ class CalcView {
         this._container.appendChild(this._buttonsPanel);
 
         this._initClearButton();
-        this._initPlusMinisButton();
+        this._initPlusMinusButton();
         this._initPercentButton();
         this._initNumbers([7, 8, 9, 4, 5, 6, 1, 2, 3, 0]);
         this._initCommaButton();
@@ -91,11 +91,16 @@ class CalcView {
      *
      * @private
      */
-    _initPlusMinisButton() {
+    _initPlusMinusButton() {
         this.plusMinusButton = this._document.createElement('div');
         this.plusMinusButton.className = 'b-panel__button';
         this.plusMinusButton.innerHTML = '&plusmn;';
         this._buttonsPanel.appendChild(this.plusMinusButton);
+
+        this.plusMinusButton.addEventListener('click', () => {
+            var plusMinusButtonEvent = new Event('onPlusMinusButtonClicked', {bubbles: true});
+            this.divideButton.dispatchEvent(plusMinusButtonEvent);
+        });
     }
 
     /**
@@ -107,6 +112,11 @@ class CalcView {
         this.percentButton.className = 'b-panel__button';
         this.percentButton.innerHTML = '%';
         this._buttonsPanel.appendChild(this.percentButton);
+
+        this.percentButton.addEventListener('click', () => {
+            var percentButtonEvent = new Event('onPercentButtonClicked', {bubbles: true});
+            this.divideButton.dispatchEvent(percentButtonEvent);
+        });
     }
 
     /**
@@ -178,6 +188,11 @@ class CalcView {
         this.multiplyButton.className = 'b-panel__button b-panel__button_operand';
         this.multiplyButton.innerHTML = '&times;';
         this._operandsPanel.appendChild(this.multiplyButton);
+
+        this.multiplyButton.addEventListener('click', () => {
+            var multiplyButtonEvent = new Event('onMultiplyButtonClicked', {bubbles: true});
+            this.divideButton.dispatchEvent(multiplyButtonEvent);
+        });
     }
 
     /**
@@ -189,6 +204,11 @@ class CalcView {
         this.minusButton.className = 'b-panel__button b-panel__button_operand';
         this.minusButton.innerHTML = '&ndash;';
         this._operandsPanel.appendChild(this.minusButton);
+
+        this.minusButton.addEventListener('click', () => {
+            var minusButtonEvent = new Event('onMinusButtonClicked', {bubbles: true});
+            this.divideButton.dispatchEvent(minusButtonEvent);
+        });
     }
 
     /**
@@ -200,6 +220,11 @@ class CalcView {
         this.plusButton.className = 'b-panel__button b-panel__button_operand';
         this.plusButton.innerHTML = '+';
         this._operandsPanel.appendChild(this.plusButton);
+
+        this.plusButton.addEventListener('click', () => {
+            var plusButtonEvent = new Event('onPlusButtonClicked', {bubbles: true});
+            this.divideButton.dispatchEvent(plusButtonEvent);
+        });
     }
 
     /**
@@ -211,6 +236,11 @@ class CalcView {
         this.equalsButton.className = 'b-panel__button b-panel__button_operand';
         this.equalsButton.innerHTML = '=';
         this._operandsPanel.appendChild(this.equalsButton);
+
+        this.equalsButton.addEventListener('click', () => {
+            var equalsButtonEvent = new Event('onEqualsButtonClicked', {bubbles: true});
+            this.divideButton.dispatchEvent(equalsButtonEvent);
+        });
     }
 }
 
@@ -246,13 +276,11 @@ class CalcModel {
      * @param item
      */
     onNumberButtonClicked(item) {
-        if (this._newNumber == true)
-        {
+        if (this._newNumber == true) {
             this._newNumber = false;
             this._currentValue = 0;
 
-            if (!this._currentOperand)
-            {
+            if (!this._currentOperand) {
                 this._result = 0;
             }
         }
@@ -282,6 +310,48 @@ class CalcModel {
         this._newNumber = false;
     }
 
+    onPlusMinusButtonClicked() {
+        if (this._currentValue != 0) {
+            this._currentValue *= -1;
+        }
+    }
+
+    onDivideButtonClicked() {
+        this._resetNumber();
+        this._performOperation();
+        this._currentOperand = '/';
+        this._currentValue = this._result;
+    }
+
+    onMultiplyButtonClicked() {
+        this._resetNumber();
+        this._performOperation();
+        this._currentOperand = '*';
+        this._currentValue = this._result;
+    }
+
+    onPlusButtonClicked() {
+        this._resetNumber();
+        this._performOperation();
+        this._currentOperand = '+';
+        this._currentValue = this._result;
+    }
+
+    onMinusButtonClicked() {
+        this._resetNumber();
+        this._performOperation();
+        this._currentOperand = '-';
+        this._currentValue = this._result;
+    }
+
+    onEqualsButtonClicked() {
+        this._resetNumber();
+        this._performOperation();
+
+        this._currentOperand = null;
+        this._currentValue = this._result;
+    }
+
     /**
      *
      * @param number
@@ -297,6 +367,34 @@ class CalcModel {
 
         return result;
     }
+
+    /** @private */
+    _performOperation() {
+        switch (this._currentOperand)
+        {
+            case '/':
+                this._result = this._result / this._currentValue;
+                break;
+            case '*':
+                this._result = this._result * this._currentValue;
+                break;
+            case '-':
+                this._result = this._result - this._currentValue;
+                break;
+            case '+':
+                this._result = this._result + this._currentValue;
+                break;
+            default:
+                this._result = this._currentValue;
+                break;
+        }
+    }
+
+    /** @private */
+    _resetNumber() {
+        this._newNumber = true;
+        this._isComma = false;
+    }
 }
 
 class CalcController {
@@ -305,26 +403,83 @@ class CalcController {
         this._view = view;
         this._model = model;
 
-        this._initCalcButtons();
+        this._initCalcNumbersBehavior();
+        this._initCalcCommaBehavior();
+        this._initCalcClearBehavior();
+        this._initCalcPlusMinusBehavior();
+        this._initCalcPercentBehavior();
+        this._initCalcDivideBehavior();
+        this._initCalcMultiplyBehavior();
+        this._initCalcPlusBehavior();
+        this._initCalcMinusBehavior();
+        this._initCalcEqualsBehavior();
     }
 
-    _initCalcButtons() {
+    _initCalcNumbersBehavior() {
         this._document.addEventListener('onNumberButtonClicked', (event) => {
             this._model.onNumberButtonClicked(event.detail.number);
             this._view.ShowResult(this._model.getCurrentValue());
         });
+    }
 
+    _initCalcCommaBehavior() {
         this._document.addEventListener('onCommaButtonClicked', () => {
             this._model.onCommaButtonClicked();
             this._view.ShowResult(this._model.getCurrentValue());
         });
+    }
 
+    _initCalcClearBehavior() {
         this._document.addEventListener('onClearButtonClicked', () => {
             this._model.onClearButtonClicked();
             this._view.ShowResult(this._model.getCurrentValue());
         });
+    }
 
+    _initCalcPlusMinusBehavior() {
+        this._document.addEventListener('onPlusMinusButtonClicked', () => {
+            this._model.onPlusMinusButtonClicked();
+            this._view.ShowResult(this._model.getCurrentValue());
+        });
+    }
+
+    _initCalcPercentBehavior() {
+        this._document.addEventListener('onPercentButtonClicked', () => {
+        });
+    }
+
+    _initCalcDivideBehavior() {
         this._document.addEventListener('onDivideButtonClicked', () => {
+            this._model.onDivideButtonClicked();
+            this._view.ShowResult(this._model.getResult());
+        });
+    }
+
+    _initCalcMultiplyBehavior() {
+        this._document.addEventListener('onMultiplyButtonClicked', () => {
+            this._model.onMultiplyButtonClicked();
+            this._view.ShowResult(this._model.getResult());
+        });
+    }
+
+    _initCalcPlusBehavior() {
+        this._document.addEventListener('onPlusButtonClicked', () => {
+            this._model.onPlusButtonClicked();
+            this._view.ShowResult(this._model.getResult());
+        });
+    }
+
+    _initCalcMinusBehavior() {
+        this._document.addEventListener('onMinusButtonClicked', () => {
+            this._model.onMinusButtonClicked();
+            this._view.ShowResult(this._model.getResult());
+        });
+    }
+
+    _initCalcEqualsBehavior() {
+        this._document.addEventListener('onEqualsButtonClicked', () => {
+            this._model.onEqualsButtonClicked();
+            this._view.ShowResult(this._model.getResult());
         });
     }
 }
