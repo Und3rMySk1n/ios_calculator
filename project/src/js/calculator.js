@@ -8,16 +8,16 @@ class CalcView {
         this._buttonsPanel = null;
         this._operandsPanel = null;
 
-        this.clearButton = null;
-        this.plusMinusButton = null;
-        this.percentButton = null;
-        this.commaButton = null;
-        this.divideButton = null;
-        this.multiplyButton = null;
-        this.minusButton = null;
-        this.plusButton = null;
-        this.equalsButton = null;
-        this.numberButtons = [];
+        this._clearButton = null;
+        this._plusMinusButton = null;
+        this._percentButton = null;
+        this._commaButton = null;
+        this._divideButton = null;
+        this._multiplyButton = null;
+        this._minusButton = null;
+        this._plusButton = null;
+        this._equalsButton = null;
+        this._numberButtons = [];
 
         this._initResultScreen();
         this._initButtonsPanel();
@@ -76,14 +76,14 @@ class CalcView {
      * @private
      */
     _initClearButton() {
-        this.clearButton = this._document.createElement('div');
-        this.clearButton.className = 'b-panel__button';
-        this.clearButton.innerText = 'C';
-        this._buttonsPanel.appendChild(this.clearButton);
+        this._clearButton = this._document.createElement('div');
+        this._clearButton.className = 'b-panel__button';
+        this._clearButton.innerText = 'C';
+        this._buttonsPanel.appendChild(this._clearButton);
 
-        this.clearButton.addEventListener('click', () => {
+        this._clearButton.addEventListener('click', () => {
             var clearButtonEvent = new Event('onClearButtonClicked', {bubbles: true});
-            this.divideButton.dispatchEvent(clearButtonEvent);
+            this._clearButton.dispatchEvent(clearButtonEvent);
         });
     }
 
@@ -92,14 +92,14 @@ class CalcView {
      * @private
      */
     _initPlusMinusButton() {
-        this.plusMinusButton = this._document.createElement('div');
-        this.plusMinusButton.className = 'b-panel__button';
-        this.plusMinusButton.innerHTML = '&plusmn;';
-        this._buttonsPanel.appendChild(this.plusMinusButton);
+        this._plusMinusButton = this._document.createElement('div');
+        this._plusMinusButton.className = 'b-panel__button';
+        this._plusMinusButton.innerHTML = '&plusmn;';
+        this._buttonsPanel.appendChild(this._plusMinusButton);
 
-        this.plusMinusButton.addEventListener('click', () => {
+        this._plusMinusButton.addEventListener('click', () => {
             var plusMinusButtonEvent = new Event('onPlusMinusButtonClicked', {bubbles: true});
-            this.divideButton.dispatchEvent(plusMinusButtonEvent);
+            this._plusMinusButton.dispatchEvent(plusMinusButtonEvent);
         });
     }
 
@@ -108,14 +108,14 @@ class CalcView {
      * @private
      */
     _initPercentButton() {
-        this.percentButton = this._document.createElement('div');
-        this.percentButton.className = 'b-panel__button';
-        this.percentButton.innerHTML = '%';
-        this._buttonsPanel.appendChild(this.percentButton);
+        this._percentButton = this._document.createElement('div');
+        this._percentButton.className = 'b-panel__button';
+        this._percentButton.innerHTML = '%';
+        this._buttonsPanel.appendChild(this._percentButton);
 
-        this.percentButton.addEventListener('click', () => {
+        this._percentButton.addEventListener('click', () => {
             var percentButtonEvent = new Event('onPercentButtonClicked', {bubbles: true});
-            this.divideButton.dispatchEvent(percentButtonEvent);
+            this._percentButton.dispatchEvent(percentButtonEvent);
         });
     }
 
@@ -133,7 +133,7 @@ class CalcView {
             }
             number.innerHTML = item;
             this._buttonsPanel.appendChild(number);
-            this.numberButtons.push(number);
+            this._numberButtons.push(number);
 
             number.addEventListener('click', () => {
                 var numberButtonEvent = new CustomEvent('onNumberButtonClicked', {
@@ -142,7 +142,7 @@ class CalcView {
                             number: item
                         }
                     });
-                this.divideButton.dispatchEvent(numberButtonEvent);
+                number.dispatchEvent(numberButtonEvent);
             });
         });
     }
@@ -152,14 +152,14 @@ class CalcView {
      * @private
      */
     _initCommaButton() {
-        this.commaButton = this._document.createElement('div');
-        this.commaButton.className = 'b-panel__button';
-        this.commaButton.innerHTML = ',';
-        this._buttonsPanel.appendChild(this.commaButton);
+        this._commaButton = this._document.createElement('div');
+        this._commaButton.className = 'b-panel__button';
+        this._commaButton.innerHTML = ',';
+        this._buttonsPanel.appendChild(this._commaButton);
 
-        this.commaButton.addEventListener('click', () => {
+        this._commaButton.addEventListener('click', () => {
             var commaButtonEvent = new Event('onCommaButtonClicked', {bubbles: true});
-            this.divideButton.dispatchEvent(commaButtonEvent);
+            this._commaButton.dispatchEvent(commaButtonEvent);
         });
     }
 
@@ -168,14 +168,14 @@ class CalcView {
      * @private
      */
     _initDivideButton() {
-        this.divideButton = this._document.createElement('div');
-        this.divideButton.className = 'b-panel__button b-panel__button_operand';
-        this.divideButton.innerHTML = '&divide;';
-        this._operandsPanel.appendChild(this.divideButton);
+        this._divideButton = this._document.createElement('div');
+        this._divideButton.className = 'b-panel__button b-panel__button_operand';
+        this._divideButton.innerHTML = '&divide;';
+        this._operandsPanel.appendChild(this._divideButton);
 
-        this.divideButton.addEventListener('click', () => {
+        this._divideButton.addEventListener('click', () => {
             var divideButtonEvent = new Event('onDivideButtonClicked', {bubbles: true});
-            this.divideButton.dispatchEvent(divideButtonEvent);
+            this._divideButton.dispatchEvent(divideButtonEvent);
         });
     }
 
@@ -184,14 +184,14 @@ class CalcView {
      * @private
      */
     _initMultiplyButton() {
-        this.multiplyButton = this._document.createElement('div');
-        this.multiplyButton.className = 'b-panel__button b-panel__button_operand';
-        this.multiplyButton.innerHTML = '&times;';
-        this._operandsPanel.appendChild(this.multiplyButton);
+        this._multiplyButton = this._document.createElement('div');
+        this._multiplyButton.className = 'b-panel__button b-panel__button_operand';
+        this._multiplyButton.innerHTML = '&times;';
+        this._operandsPanel.appendChild(this._multiplyButton);
 
-        this.multiplyButton.addEventListener('click', () => {
+        this._multiplyButton.addEventListener('click', () => {
             var multiplyButtonEvent = new Event('onMultiplyButtonClicked', {bubbles: true});
-            this.divideButton.dispatchEvent(multiplyButtonEvent);
+            this._multiplyButton.dispatchEvent(multiplyButtonEvent);
         });
     }
 
@@ -200,14 +200,14 @@ class CalcView {
      * @private
      */
     _initMinusButton() {
-        this.minusButton = this._document.createElement('div');
-        this.minusButton.className = 'b-panel__button b-panel__button_operand';
-        this.minusButton.innerHTML = '&ndash;';
-        this._operandsPanel.appendChild(this.minusButton);
+        this._minusButton = this._document.createElement('div');
+        this._minusButton.className = 'b-panel__button b-panel__button_operand';
+        this._minusButton.innerHTML = '&ndash;';
+        this._operandsPanel.appendChild(this._minusButton);
 
-        this.minusButton.addEventListener('click', () => {
+        this._minusButton.addEventListener('click', () => {
             var minusButtonEvent = new Event('onMinusButtonClicked', {bubbles: true});
-            this.divideButton.dispatchEvent(minusButtonEvent);
+            this._minusButton.dispatchEvent(minusButtonEvent);
         });
     }
 
@@ -216,14 +216,14 @@ class CalcView {
      * @private
      */
     _initPlusButton() {
-        this.plusButton = this._document.createElement('div');
-        this.plusButton.className = 'b-panel__button b-panel__button_operand';
-        this.plusButton.innerHTML = '+';
-        this._operandsPanel.appendChild(this.plusButton);
+        this._plusButton = this._document.createElement('div');
+        this._plusButton.className = 'b-panel__button b-panel__button_operand';
+        this._plusButton.innerHTML = '+';
+        this._operandsPanel.appendChild(this._plusButton);
 
-        this.plusButton.addEventListener('click', () => {
+        this._plusButton.addEventListener('click', () => {
             var plusButtonEvent = new Event('onPlusButtonClicked', {bubbles: true});
-            this.divideButton.dispatchEvent(plusButtonEvent);
+            this._plusButton.dispatchEvent(plusButtonEvent);
         });
     }
 
@@ -232,14 +232,14 @@ class CalcView {
      * @private
      */
     _initEqualsButton() {
-        this.equalsButton = this._document.createElement('div');
-        this.equalsButton.className = 'b-panel__button b-panel__button_operand';
-        this.equalsButton.innerHTML = '=';
-        this._operandsPanel.appendChild(this.equalsButton);
+        this._equalsButton = this._document.createElement('div');
+        this._equalsButton.className = 'b-panel__button b-panel__button_operand';
+        this._equalsButton.innerHTML = '=';
+        this._operandsPanel.appendChild(this._equalsButton);
 
-        this.equalsButton.addEventListener('click', () => {
+        this._equalsButton.addEventListener('click', () => {
             var equalsButtonEvent = new Event('onEqualsButtonClicked', {bubbles: true});
-            this.divideButton.dispatchEvent(equalsButtonEvent);
+            this._equalsButton.dispatchEvent(equalsButtonEvent);
         });
     }
 }
@@ -314,6 +314,10 @@ class CalcModel {
         if (this._currentValue != 0) {
             this._currentValue *= -1;
         }
+    }
+
+    onPercentButtonClicked() {
+        this._currentValue = this._result * (this._currentValue / 100);
     }
 
     onDivideButtonClicked() {
@@ -445,6 +449,8 @@ class CalcController {
 
     _initCalcPercentBehavior() {
         this._document.addEventListener('onPercentButtonClicked', () => {
+            this._model.onPercentButtonClicked();
+            this._view.ShowResult(this._model.getCurrentValue());
         });
     }
 
