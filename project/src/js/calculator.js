@@ -2,6 +2,8 @@
 
 class CalcView {
     constructor(container) {
+        this._maxDigits = 6;
+
         this._document = document;
         this._container = this._document.getElementById(container);
         this._resultScreen = null;
@@ -25,7 +27,15 @@ class CalcView {
     }
 
     ShowResult(resultValue) {
-        this._resultScreen.innerHTML = resultValue;
+        let result = resultValue;
+        let resultParts = resultValue.split('.');
+        if (resultParts.length == 2)
+        {
+            resultParts[1] = resultParts[1].substring(0, this._maxDigits - resultParts[0].length);
+            result = resultParts[0] + '.' + resultParts[1];
+        }
+
+        this._resultScreen.innerHTML = result;
     }
 
     /**
@@ -257,7 +267,7 @@ class CalcModel {
 
     /**
      *
-     * @returns {number|string}
+     * @returns {string}
      */
     getResult() {
         return this._formatNumber(this._result);
@@ -265,7 +275,7 @@ class CalcModel {
 
     /**
      *
-     * @returns {number|string}
+     * @returns {string}
      */
     getCurrentValue() {
         return this._formatNumber(this._currentValue);
@@ -359,17 +369,16 @@ class CalcModel {
     /**
      *
      * @param number
-     * @returns {number|string}
+     * @returns {string}
      * @private
      */
     _formatNumber(number){
-        let numbersAfterComma = Math.max(this._currentNumbersAfterComma, this._resultNumbersAfterComma);
-        let result = (parseInt(number * Math.pow(10, numbersAfterComma), 10)) / Math.pow(10, numbersAfterComma);
-        if (numbersAfterComma == 0 && this._isComma) {
+        let result = number;
+        if (this._currentNumbersAfterComma == 0 && this._isComma) {
             result += '.';
         }
 
-        return result;
+        return result.toString();
     }
 
     /** @private */
