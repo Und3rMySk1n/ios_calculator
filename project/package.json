@@ -16,7 +16,8 @@
     "gulp-uglify": "*",
     "gulp-util": "^3.0.3",
     "gulp-watch": "*",
-    "google-closure-compiler-js": "latest"
+    "google-closure-compiler": "latest",
+    "google-closure-library": "latest"
   },
   "dependencies": {
     "gulp-lodash": "^0.1.2"

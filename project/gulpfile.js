@@ -19,7 +19,10 @@ var path = {
     },
     src: {
         html: 'src/*.html',
-        js: 'src/js/*.js',
+        js: [
+            'node_modules/google-closure-library/closure/goog/base.js',
+            'src/js/*.js'
+        ],
         style: 'src/scss/*.scss'
     },
     watch: {
@@ -41,8 +44,7 @@ gulp.task('js:build', function () {
             compilationLevel: 'ADVANCED',
             warningLevel: 'VERBOSE',
             outputWrapper: '(function(){\n%output%\n}).call(this)',
-            jsOutputFile: 'calculator.js',
-            createSourceMap: true
+            jsOutputFile: 'calculator.js'
         }))
         .pipe(gulp.dest(path.build.js));
 });
