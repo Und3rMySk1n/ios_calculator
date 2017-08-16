@@ -23,6 +23,8 @@ class CalcController {
         this._initCalcPlusBehavior();
         this._initCalcMinusBehavior();
         this._initCalcEqualsBehavior();
+
+        this._initUndoRedoHotkeys();
     }
 
     /** @private */
@@ -103,6 +105,20 @@ class CalcController {
             this._model.onEqualsButtonClicked();
             this._view.ShowResult(this._model.getResult());
         });
+    }
+
+    /** @private */
+    _initUndoRedoHotkeys() {
+        this._document.addEventListener('keydown', (event) => {
+            if (event.ctrlKey && event.keyCode == 90) {
+                if (event.shiftKey) {
+                    console.log('Ctrl + Shift + Z');
+                } else {
+                    this._model.undoLastCommand();
+                    this._view.ShowResult(this._model.getCurrentValue());
+                }
+            }
+        })
     }
 }
 

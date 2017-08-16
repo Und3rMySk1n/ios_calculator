@@ -1,4 +1,5 @@
 goog.module('CalcModel');
+const CalcCommand = goog.require('CalcCommand');
 
 class CalcModel {
     constructor() {
@@ -7,9 +8,6 @@ class CalcModel {
 
         /** @private {number} */
         this._currentValue = 0;
-
-        /** @private {number} */
-        this._resultNumbersAfterComma = 0;
 
         /** @private {number} */
         this._currentNumbersAfterComma = 0;
@@ -22,6 +20,9 @@ class CalcModel {
 
         /** @private {boolean} */
         this._newNumber = false;
+
+        /** @private {Array} */
+        this._commands = [];
     }
 
     /**
@@ -40,25 +41,63 @@ class CalcModel {
         return this._formatNumber(this._currentValue);
     }
 
+    undoLastCommand() {
+        if (this._commands != 0)
+        {
+            let removedCommand = this._commands.pop();
+            removedCommand.undo(this);
+        }
+    }
+
     /**
      *
      * @param number {number}
      */
     onNumberButtonClicked(number) {
-        if (this._newNumber == true) {
-            this._newNumber = false;
-            this._currentValue = 0;
+        let numberCommand = new CalcCommand(this._enterNumber, this._removeNumber);
+        let currentCommand = numberCommand.execute(this, number);
+        this._commands.push(numberCommand);
+    }
 
-            if (!this._currentOperand) {
-                this._result = 0;
+    /**
+     *
+     * @param thisPtr {Object}
+     * @param number {number}
+     * @private
+     */
+    _enterNumber(thisPtr, number) {
+        if (thisPtr._newNumber == true) {
+            thisPtr._newNumber = false;
+            thisPtr._currentValue = 0;
+
+            if (!thisPtr._currentOperand) {
+                thisPtr._result = 0;
             }
         }
-
-        if (!this._isComma) {
-            this._currentValue = this._currentValue * 10 + parseInt(number, 10);
+        if (!thisPtr._isComma) {
+            thisPtr._currentValue = thisPtr._currentValue * 10 + parseInt(number, 10);
         } else {
-            this._currentNumbersAfterComma++;
-            this._currentValue = this._currentValue + (parseInt(number, 10) / Math.pow(10,this._currentNumbersAfterComma));
+            thisPtr._currentNumbersAfterComma++;
+            thisPtr._currentValue = thisPtr._currentValue + (parseInt(number, 10) / Math.pow(10,thisPtr._currentNumbersAfterComma));
+        }
+    }
+
+    /**
+     *
+     * @param thisPtr
+     * @private
+     */
+    _removeNumber(thisPtr) {
+        if (!thisPtr._isComma) {
+            thisPtr._currentValue = Math.floor(thisPtr._currentValue / 10);
+        } else {
+            if (thisPtr._currentNumbersAfterComma == 0) {
+                thisPtr._isComma = false;
+            }
+            else {
+                thisPtr._currentValue = parseFloat(thisPtr._currentValue.toString().substring(0, thisPtr._currentValue.toString().length - 1));
+                thisPtr._currentNumbersAfterComma--;
+            }
         }
     }
 
@@ -72,7 +111,6 @@ class CalcModel {
     onClearButtonClicked() {
         this._result = 0;
         this._currentValue = 0;
-        this._resultNumbersAfterComma = 0;
         this._currentNumbersAfterComma = 0;
         this._currentOperand = null;
         this._isComma = false;
