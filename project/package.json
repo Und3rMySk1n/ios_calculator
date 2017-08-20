@@ -17,7 +17,8 @@
     "gulp-util": "^3.0.3",
     "gulp-watch": "*",
     "google-closure-compiler": "latest",
-    "google-closure-library": "latest"
+    "google-closure-library": "latest",
+    "mocha": "latest"
   },
   "dependencies": {
     "gulp-lodash": "^0.1.2"
