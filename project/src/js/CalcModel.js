@@ -23,6 +23,9 @@ class CalcModel {
 
         /** @private {Array} */
         this._commands = [];
+
+        /** @private {number} */
+        this._currentCommand = 0;
     }
 
     /**
@@ -42,11 +45,27 @@ class CalcModel {
     }
 
     undoLastCommand() {
-        if (this._commands != 0)
+        if (this._currentCommand != 0)
         {
-            let removedCommand = this._commands.pop();
-            removedCommand.undo(this);
+            let lastCommand = this._commands[this._currentCommand - 1];
+            lastCommand.undo(this, lastCommand.value);
+            this._currentCommand--;
         }
+    }
+
+    redoLastCommand() {
+        if (this._currentCommand != this._commands.length)
+        {
+            let lastCommand = this._commands[this._currentCommand];
+            lastCommand.execute(this, lastCommand.value);
+            this._currentCommand++;
+        }
+    }
+
+    /** @private */
+    _clearCommandsList() {
+        this._currentCommand = 0;
+        this._commands = [];
     }
 
     /**
@@ -54,9 +73,10 @@ class CalcModel {
      * @param number {number}
      */
     onNumberButtonClicked(number) {
-        let numberCommand = new CalcCommand(this._enterNumber, this._removeNumber);
-        let currentCommand = numberCommand.execute(this, number);
+        let numberCommand = new CalcCommand(this._enterNumber, this._removeNumber, number);
+        numberCommand.execute(this, number);
         this._commands.push(numberCommand);
+        this._currentCommand++;
     }
 
     /**
@@ -67,6 +87,7 @@ class CalcModel {
      */
     _enterNumber(thisPtr, number) {
         if (thisPtr._newNumber == true) {
+            this._clearCommandsList();
             thisPtr._newNumber = false;
             thisPtr._currentValue = 0;
 
@@ -101,11 +122,35 @@ class CalcModel {
         }
     }
 
-    onCommaButtonClicked() {
-        if (!this._isComma) {
-            this._currentNumbersAfterComma = 0;
-            this._isComma = true;
+    /**
+     *
+     * @param thisPtr
+     * @private
+     */
+    _addComma(thisPtr) {
+        if (!thisPtr._isComma) {
+            thisPtr._currentNumbersAfterComma = 0;
+            thisPtr._isComma = true;
         }
+    }
+
+    /**
+     *
+     * @param thisPtr
+     * @private
+     */
+    _removeComma(thisPtr) {
+        if (thisPtr._isComma) {
+            thisPtr._currentNumbersAfterComma = 0;
+            thisPtr._isComma = false;
+        }
+    }
+
+    onCommaButtonClicked() {
+        let commaCommand = new CalcCommand(this._addComma, this._removeComma, null);
+        commaCommand.execute(this);
+        this._commands.push(commaCommand);
+        this._currentCommand++;
     }
 
     onClearButtonClicked() {
@@ -115,6 +160,8 @@ class CalcModel {
         this._currentOperand = null;
         this._isComma = false;
         this._newNumber = false;
+
+        this._clearCommandsList();
     }
 
     onPlusMinusButtonClicked() {

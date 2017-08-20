@@ -112,7 +112,8 @@ class CalcController {
         this._document.addEventListener('keydown', (event) => {
             if (event.ctrlKey && event.keyCode == 90) {
                 if (event.shiftKey) {
-                    console.log('Ctrl + Shift + Z');
+                    this._model.redoLastCommand();
+                    this._view.ShowResult(this._model.getCurrentValue());
                 } else {
                     this._model.undoLastCommand();
                     this._view.ShowResult(this._model.getCurrentValue());
