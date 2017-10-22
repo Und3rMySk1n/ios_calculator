@@ -87,7 +87,7 @@ class CalcModel {
      */
     _enterNumber(thisPtr, number) {
         if (thisPtr._newNumber == true) {
-            this._clearCommandsList();
+            thisPtr._clearCommandsList();
             thisPtr._newNumber = false;
             thisPtr._currentValue = 0;
 

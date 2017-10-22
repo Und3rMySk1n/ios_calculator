@@ -9,13 +9,17 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
     rigger = require('gulp-rigger'),
     clean = require('gulp-clean'),
-    minifyHTML = require('gulp-minify-html');
+    minifyHTML = require('gulp-minify-html'),
+    mocha = require('gulp-mocha'),
+    runSequence = require('run-sequence');
 
 var path = {
     build: {
         html: 'build/',
         js: 'build/js/',
-        css: 'build/css/'
+        css: 'build/css/',
+        test: 'test/',
+        prepare_test: 'test/src/'
     },
     src: {
         html: 'src/*.html',
@@ -23,7 +27,16 @@ var path = {
             'node_modules/google-closure-library/closure/goog/base.js',
             'src/js/*.js'
         ],
-        style: 'src/scss/*.scss'
+        style: 'src/scss/*.scss',
+        prepare_test: [
+            'node_modules/google-closure-library/closure/goog/base.js',
+            'src/js/CalcCommand.js',
+            'src/js/CalcModel.js',
+            'src/js/lib/mocha.js',
+            'src/js/model_test.js'
+        ],
+        test: 'test/src/test.js',
+        test_run: 'test/src/test.js'
     },
     watch: {
         html: 'src/**/*.html',
@@ -41,8 +54,9 @@ gulp.task('html:build', function () {
 gulp.task('js:build', function () {
     return gulp.src(path.src.js)
         .pipe(compiler({
-            compilationLevel: 'ADVANCED',
+            compilationLevel: 'SIMPLE',
             warningLevel: 'VERBOSE',
+            processCommonJsModules: true,
             outputWrapper: '(function(){\n%output%\n}).call(this)',
             jsOutputFile: 'calculator.js'
         }))
@@ -56,10 +70,41 @@ gulp.task('style:build', function () {
         .pipe(gulp.dest(path.build.css));
 });
 
+gulp.task('test:prepare', function () {
+    gulp.src(path.src.prepare_test)
+        .pipe(compiler({
+            compilationLevel: 'WHITESPACE_ONLY',
+            warningLevel: 'VERBOSE',
+            processCommonJsModules: true,
+            outputWrapper: '(function(){\n%output%\n}).call(this)',
+            jsOutputFile: 'calculator_model_test.js',
+            env: 'BROWSER',
+            externs: ['node']
+        }))
+        .pipe(gulp.dest(path.build.prepare_test));
+});
+
+gulp.task('test:run', ['test:prepare'], function () {
+    gulp.src(path.src.test_run)
+        .pipe(rigger())
+        .pipe(gulp.dest(path.build.test))
+        .pipe(mocha({
+            reporter: 'spec',
+            require: [
+                'assert'
+            ]
+        }));
+});
+
 gulp.task('build', [
     'html:build',
     'js:build',
     'style:build'
+]);
+
+gulp.task('test', [
+    'test:prepare',
+    'test:run'
 ]);
 
 gulp.task('clean', function () {

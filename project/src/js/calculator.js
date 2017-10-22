@@ -1,11 +1,11 @@
 goog.module('calculator');
 
-const CalcView = goog.require('CalcView');
-const CalcModel = goog.require('CalcModel');
-const CalcController = goog.require('CalcController');
+let CalcView = goog.require('CalcView');
+let CalcModel = goog.require('CalcModel');
+let CalcController = goog.require('CalcController');
 
-const view = new CalcView('calculator');
-const model = new CalcModel();
-const controller = new CalcController(view, model);
+let view = new CalcView('calculator');
+let model = new CalcModel();
+let controller = new CalcController(view, model);
 
 exports = {};
