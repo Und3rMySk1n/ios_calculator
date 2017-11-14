@@ -1,9 +1,14 @@
 {
   "name": "ios-like-calculator",
+  "description": "iOS-like calculator using JS",
   "version": "1.0.0",
   "repository": {
     "type": "",
     "url": "http://github.com/Und3rMySk1n/ios_calculator"
+  },
+  "main": "app/main.js",
+  "scripts": {
+    "start": "./node_modules/.bin/electron ."
   },
   "devDependencies": {
     "gulp": "^3.8.11",
@@ -23,9 +28,10 @@
     "sinon": "latest",
     "gulp-mocha": "latest",
     "gulp-phantom": "latest",
-    "sinon": "latest",
     "chai": "latest",
-    "run-sequence": "latest"
+    "run-sequence": "latest",
+    "electron": "latest",
+    "electron-prebuilt": "latest"
   },
   "dependencies": {
     "gulp-lodash": "^0.1.2"

@@ -33,7 +33,7 @@ var path = {
             'src/js/CalcCommand.js',
             'src/js/CalcModel.js',
             'src/js/lib/mocha.js',
-            'src/js/model_test.js'
+            'src/js/test/model_test.js'
         ],
         test: 'test/src/test.js',
         test_run: 'test/src/test.js'
